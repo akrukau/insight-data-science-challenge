@@ -9,17 +9,7 @@
 import json
 import sys
 import re
-
-def clean(text):
-    #Remove all non-ascii characters that correspond to \uxxxx sequences
-    (cleaned_text, unicode_deletions) = re.subn(r'[^\x00-\x7F]','', text)
-    tweet_has_unicode = False
-    if unicode_deletions > 0:
-        tweet_has_unicode = True
-    #Change all whitespace to a single space, as mentioned in FAQ
-    (cleaned_text, whitespace_changes) = re.subn(r'[\"\\\b\f\n\r\t]',' ', cleaned_text)
-    return (cleaned_text, tweet_has_unicode)
-
+from text_utilities import clean_string
 
 #with open('./example-wrong.txt', 'rb') as input_file:
 if len(sys.argv) < 3:
@@ -34,7 +24,7 @@ else:
                 tweet = json.loads(line)
                 if "text" in tweet:
                     text = tweet["text"]
-                    (cleaned_text, tweet_has_unicode) = clean(text)
+                    (cleaned_text, tweet_has_unicode) = clean_string(text)
                     if tweet_has_unicode:
                         count_tweets_unicode += 1
             
@@ -45,9 +35,12 @@ else:
                     cleaned_tweet = cleaned_text + " (timestamp: " + timestamp + ")\n" 
                     output_file.write(cleaned_tweet)
             
-            except:
+            except ValueError:
                 sys.stderr.write("The following line is not valid JSON\n")
                 sys.stderr.write(line)
+            #except:
+            #    sys.stderr.write("The following line could not be parsed\n")
+            #    sys.stderr.write(line)
         
         summary =  "\n" + str(count_tweets_unicode) + " tweets contained unicode."
         output_file.write(summary)

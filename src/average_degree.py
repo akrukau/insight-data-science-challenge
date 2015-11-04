@@ -8,20 +8,10 @@
 #
 import json
 import sys
-import re
 from datetime import datetime, timedelta
 from email.utils import parsedate_tz
 from heapq import heappush, heappop
-
-def clean(text):
-    #Remove all non-ascii characters that correspond to \uxxxx sequences
-    (cleaned_text, unicode_deletions) = re.subn(r'[^\x00-\x7F]','', text)
-    tweet_has_unicode = False
-    if unicode_deletions > 0:
-        tweet_has_unicode = True
-    #Change all whitespace to a single space, as mentioned in FAQ
-    (cleaned_text, whitespace_changes) = re.subn(r'[\"\\\b\f\n\r\t]',' ', cleaned_text)
-    return (cleaned_text, tweet_has_unicode)
+from text_utilities import clean_string
 
 def extract_time(timestamp_string):
     time_tuple = parsedate_tz(timestamp_string.strip())
@@ -29,12 +19,22 @@ def extract_time(timestamp_string):
     timezone_correction = timedelta(seconds = time_tuple[-1]) 
     return raw_time - timezone_correction
 
-#with open('../data-gen/short-tweets.txt', 'rb') as input_file:
-with open('../data-gen/tweets.txt', 'rb') as input_file:
+def remove_old_tweets(heap, current_time):
+    while heap:        
+        oldest_time = heap[0][0]
+        time_dif = current_time - oldest_time
+        if time_dif.days == 0 and time_dif.seconds <= 60:
+            break
+        tweet = heappop(heap)
+        print "Removing old tweet", tweet
+
+with open('../data-gen/short-tweets.txt', 'rb') as input_file:
+#with open('../data-gen/tweets.txt', 'rb') as input_file:
     heap = []
     for line in input_file:
         try:
             tweet = json.loads(line)
+            print "Examining tweet",tweet
             tags = []
             if "entities" in tweet and "hashtags" in tweet["entities"]:
                 tags.append(tweet['entities']['hashtags'])
@@ -44,14 +44,14 @@ with open('../data-gen/tweets.txt', 'rb') as input_file:
                 #print timestamp
                 tweet_entry = (timestamp, tags)   
                 heappush(heap, tweet_entry)
+                remove_old_tweets(heap, timestamp)
 
-
-        except IndexError:
-            sys.stderr.write("We suspect that the following line is not valid JSON\n")
+        except ValueError:
+            sys.stderr.write("The following line is not valid JSON\n")
             sys.stderr.write(line)
+        #except:
+        #    sys.stderr.write("The following line could not be parsed\n")
+        #    sys.stderr.write(line)
 
-    while heap:        
-        tweet = heappop(heap)
-        #print tweet
             
 
