@@ -11,44 +11,65 @@ import sys
 from email.utils import parsedate_tz
 from datetime import datetime, timedelta
 from heapq import heappush, heappop
+from collections import Counter
 from text_utilities import clean_string
 
 class Graph:
     def __init__(self):
-        self.adj = {}
+        self.edges = Counter()
+        self.degrees = Counter()
 
-    def add(self, vertex1, vertex2):
-        vertex1 = vertex1.lower()
-        vertex2 = vertex2.lower()
+    def add_edges(self, tags):
+        # Input tags are in mixed case
+        # Make all tags lowercase and remove repeated tags.
+        tags = set( map(lambda s: s.lower(), tags) )
+        if (len(tags) >= 2):
+            for i in tags:
+                for j in tags:
+                    if i != j:
+                        self.edges[(i, j)] += 1
+                        if self.edges[(i, j)] == 1:
+                            self.degrees[i] += 1
 
-        if vertex1 not in self.adj:
-            self.adj[vertex1] = [vertex2]
-        elif vertex2 not in self.adj[vertex1]: 
-                self.adj[vertex1].append(vertex2)
 
-        if vertex2 not in self.adj:
-            self.adj[vertex2] = [vertex1]
-        elif vertex2 not in self.adj[vertex1]: 
-            self.adj[vertex2].append(vertex1) 
+    def remove_edges(self, tags):
+        # Input tags are all lowercase
+        if (len(tags) >= 2):
+            for i in tags:
+                for j in tags:
+                    if i != j:
+                        self.edges[(i, j)] -= 1
+                        if self.edges[(i, j)] == 0:
+                            self.degrees[i] -= 1
+                            if self.degrees <= 0:
+                                self.vertex_count -= 1
 
-    def remove(self, vertex1):
-        vertex1 = vertex1.lower()
-        if vertex1 in self.adj:
-            adjacent_vertices = self.adj[vertex1]
-            for vertex2 in adjacent_vertices:
-                try:
-                    self.adj[vertex2].remove(vertex1)
-                except ValueError:
-                    pass
-                except KeyError:
-                    print "Key",vertex2,"is not found in:"
-                    self.show()
-            self.adj.pop(vertex1, None)
-            
-    def show(self):
-        for vertex in self.adj:
-            print "Vertex:",vertex,"-",self.adj[vertex]
-                
+    def show_edges(self):
+        print "Graph", self.edges    
+    
+    def show_degrees(self):
+        for vertex in self.degrees:
+            print "Vertex", vertex, "degree", self.degrees[vertex]
+            print 
+
+    def average_degree(self):
+        #print "Graph", self.edges  
+        vertex_count = sum(1 for v in self.degrees if self.degrees[v] > 0)
+        sum_degrees  = sum(self.degrees[v] for v in self.degrees)
+        if vertex_count > 0:
+            average_degree = 1.0 * sum_degrees / vertex_count
+        else:    
+            average_degree = 0.0
+        info_average_degree = "Average degree " + "{0:.2f}".format(average_degree)    
+        #print "Vertex count",vertex_count
+        #print "Degree count",sum_degrees
+        print info_average_degree
+        print 
+
+    def dump(self):
+        self.show_edges()
+        self.show_degrees()
+        self.average_degree()
 
 def extract_time(timestamp_string):
     tuple_time = parsedate_tz(timestamp_string.strip())
@@ -65,12 +86,12 @@ def add_tweet(heap, graph, tweet):
             if "text" in entry:
                 tags.append(entry["text"].lower())
     tweet_entry = (timestamp, tags)
-    print "Adding tweet",tweet_entry
-    if (len(tags) >= 2):
-        graph.add(tags[0], tags[1])
     heappush(heap, tweet_entry)
-    graph.show()    
-    print 
+    print "Adding tweet",tweet_entry
+    graph.add_edges(tags)
+
+    graph.dump()
+       
     return timestamp
 
 def remove_old_tweets(heap, graph, current_time):
@@ -81,11 +102,10 @@ def remove_old_tweets(heap, graph, current_time):
             break
         tweet = heappop(heap)
         tags = tweet[1]
-        for tag in tags:
-            graph.remove(tag)
         print "Removing old tweet", tweet
-        graph.show()
-        print 
+        graph.remove_edges(tags)
+
+        graph.dump()
 
 with open('../data-gen/short-tweets.txt', 'rb') as input_file:
 #with open('../data-gen/tweets.txt', 'rb') as input_file:
