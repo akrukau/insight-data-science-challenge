@@ -42,7 +42,7 @@ with open('../data-gen/tweets.txt', 'rb') as input_file:
                 timestamp_string = tweet["created_at"]
                 timestamp = extract_time(timestamp_string)
                 #print timestamp
-                tweet_entry = (timestamp, tags[0])   
+                tweet_entry = (timestamp, tags)   
                 heappush(heap, tweet_entry)
 
 
@@ -50,7 +50,7 @@ with open('../data-gen/tweets.txt', 'rb') as input_file:
             sys.stderr.write("We suspect that the following line is not valid JSON\n")
             sys.stderr.write(line)
 
-    while queue:        
+    while heap:        
         tweet = heappop(heap)
         #print tweet
             
