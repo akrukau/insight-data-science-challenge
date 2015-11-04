@@ -22,8 +22,8 @@ class Graph:
     def add_edges(self, tags):
         # Input tags are in mixed case
         # Make all tags lowercase and remove repeated tags.
-        tags = set( map(lambda s: s.lower(), tags) )
         if (len(tags) >= 2):
+            tags = set( map(lambda s: s.lower(), tags) )
             for i in tags:
                 for j in tags:
                     if i != j:
@@ -90,7 +90,7 @@ def add_tweet(heap, graph, tweet):
     print "Adding tweet",tweet_entry
     graph.add_edges(tags)
 
-    graph.dump()
+    #graph.dump()
        
     return timestamp
 
@@ -102,13 +102,12 @@ def remove_old_tweets(heap, graph, current_time):
             break
         tweet = heappop(heap)
         tags = tweet[1]
-        print "Removing old tweet", tweet
+        #print "Removing old tweet", tweet
         graph.remove_edges(tags)
 
-        graph.dump()
 
-with open('../data-gen/short-tweets.txt', 'rb') as input_file:
-#with open('../data-gen/tweets.txt', 'rb') as input_file:
+with open('../data-gen/tweets.txt', 'rb') as input_file:
+#with open('../data-gen/example-github.txt', 'rb') as input_file:
     heap = []
     graph = Graph()
     for line in input_file:
@@ -117,6 +116,8 @@ with open('../data-gen/short-tweets.txt', 'rb') as input_file:
             if "created_at" in tweet:
                 current_time = add_tweet(heap, graph, tweet)
                 remove_old_tweets(heap, graph, current_time)
+                #graph.show_degrees()
+                #graph.average_degree()
         except ValueError:
             sys.stderr.write("The following line is not valid JSON\n")
             sys.stderr.write(line)
