@@ -4,3 +4,4 @@
 {"created_at":"Thu Oct 29 17:51:55 +0000 2015","id":660116384035299332, "entities":{"hashtags":[{"text":"Apache","indices":[63,72]}]}}
 {"created_at":"Fri Oct 29 17:51:56 +0000 2015","id":660116384035299332, "entities":{"hashtags":[{"text":"Flink","indices":[56,62]},{"text":"Spark","indices":[63,72]}]}}
 {"created_at":"Fri Oct 29 17:52:05 +0000 2015","id":660116384035299332, "entities":{"hashtags":[{"text":"Hadoop","indices":[56,62]},{"text":"Apache","indices":[63,72]}]}}
+{"created_at":"Fri Oct 30 17:52:05 +0000 2015","id":660116384035299332, "entities":{"hashtags":[{"text":"Hadoop","indices":[56,62]},{"text":"Apache","indices":[63,72]}]}}

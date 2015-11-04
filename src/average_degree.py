@@ -8,8 +8,8 @@
 #
 import json
 import sys
-from datetime import datetime, timedelta
 from email.utils import parsedate_tz
+from datetime import datetime, timedelta
 from heapq import heappush, heappop
 from text_utilities import clean_string
 
@@ -18,6 +18,15 @@ def extract_time(timestamp_string):
     raw_time = datetime(*time_tuple[:6])
     timezone_correction = timedelta(seconds = time_tuple[-1]) 
     return raw_time - timezone_correction
+
+def add_tweet(heap, tweet):
+    timestamp_string = tweet["created_at"]
+    timestamp = extract_time(timestamp_string)
+    #print timestamp
+    tweet_entry = (timestamp, tags)   
+    print "Adding tweet",tweet_entry
+    heappush(heap, tweet_entry)
+    return timestamp
 
 def remove_old_tweets(heap, current_time):
     while heap:        
@@ -34,17 +43,14 @@ with open('../data-gen/short-tweets.txt', 'rb') as input_file:
     for line in input_file:
         try:
             tweet = json.loads(line)
-            print "Examining tweet",tweet
             tags = []
             if "entities" in tweet and "hashtags" in tweet["entities"]:
-                tags.append(tweet['entities']['hashtags'])
+                for entry in tweet['entities']['hashtags']:
+                    if "text" in entry:
+                        tags.append(entry["text"])
             if "created_at" in tweet:
-                timestamp_string = tweet["created_at"]
-                timestamp = extract_time(timestamp_string)
-                #print timestamp
-                tweet_entry = (timestamp, tags)   
-                heappush(heap, tweet_entry)
-                remove_old_tweets(heap, timestamp)
+                current_time = add_tweet(heap, tweet)
+                remove_old_tweets(heap, current_time)
 
         except ValueError:
             sys.stderr.write("The following line is not valid JSON\n")
