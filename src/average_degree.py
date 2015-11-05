@@ -23,15 +23,8 @@ class Graph:
         self.number_vertices = 0
 
     def add_edges(self, tags):
-        # Input tags are in mixed case Unicode.
-        # Clean text from non-ascii characters and escaped whitespace.
-        # Then make all tags lowercase and remove repeated tags.
         if (len(tags) >= 2):
-            tags = set( map(lambda s: clean_string(s)[0].lower(), tags) )
             pairs_tags = [(i, j) for i in tags for j in tags if i != j]
-            #for i in tags:
-            #    for j in tags:
-            #        if i != j:
             for (i, j) in pairs_tags:
                 self.edges[(i, j)] += 1
                 if self.edges[(i, j)] == 1:
@@ -39,11 +32,14 @@ class Graph:
                     self.degrees[i] += 1
                     if self.degrees[i] == 1:
                         self.number_vertices += 1
+        #if self.sum_degrees > 0:
+        #    print
+        #    print "Tweet is",tags
 
 
 
     def remove_edges(self, tags):
-        # Input tags are all lowercase
+        # Input tags are all in lowercase ascii characters.
         if (len(tags) >= 2):
             pairs_tags = [(i, j) for i in tags for j in tags if i != j]
             for (i, j) in pairs_tags:
@@ -60,7 +56,6 @@ class Graph:
     def show_degrees(self):
         for vertex in self.degrees:
             print "Vertex", vertex, "degree", self.degrees[vertex]
-            print 
 
     def average_degree(self):
         #print "Graph", self.edges  
@@ -72,11 +67,12 @@ class Graph:
             #average_degree = 1.0 * sum_degrees / number_vertices
         else:    
             average_degree = 0.0
-        info_average_degree = "Average degree " + "{0:.2f}".format(average_degree)    
-        #print "Vertex count",vertex_count
-        #print "Degree count",sum_degrees
+        #info_average_degree = "Average degree " + "{0:.2f}".format(average_degree)    
+        info_average_degree = "{0:.2f}".format(average_degree)    
+        #if self.sum_degrees > 0:
+        #    self.show_degrees()
         print info_average_degree
-        #print 
+        return average_degree
 
     def dump(self):
         self.show_edges()
@@ -95,8 +91,14 @@ def add_tweet(heap, graph, tweet):
     tags = []
     if "entities" in tweet and "hashtags" in tweet["entities"]:
         for entry in tweet['entities']['hashtags']:
+            # Input tags are in mixed case Unicode (created by json module).
+            # Clean text from non-ascii characters and escaped whitespace.
+            # Then make all tags lowercase and remove empty tags.
             if "text" in entry:
-                tags.append(entry["text"].lower())
+                cleaned_text =  clean_string(entry["text"])[0].lower()
+                if cleaned_text:
+                    tags.append(cleaned_text)
+    tags = set(tags)                
     tweet_entry = (timestamp, tags)
     heappush(heap, tweet_entry)
     #print "Adding tweet",tweet_entry
@@ -129,7 +131,9 @@ with open('../data-gen/tweets.txt', 'rb') as input_file:
                 current_time = add_tweet(heap, graph, tweet)
                 remove_old_tweets(heap, graph, current_time)
                 #graph.show_degrees()
-                graph.average_degree()
+                ans = graph.average_degree()
+
+
         except ValueError:
             sys.stderr.write("The following line is not valid JSON\n")
             sys.stderr.write(line)
