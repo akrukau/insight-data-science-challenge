@@ -2,7 +2,8 @@
 #
 # example of program that calculates the average degree of hashtags
 #
-# Created by Aliaksandr Krukau, 11/3/2015 
+# Created by Aliaksandr Krukau
+# Started on 11/3/2015 
 #
 # Requires Python 2.7 because of "with" statement for two files
 #
@@ -22,34 +23,36 @@ class Graph:
         self.number_vertices = 0
 
     def add_edges(self, tags):
-        # Input tags are in mixed case
-        # Clean text, then make all tags lowercase and remove repeated tags.
+        # Input tags are in mixed case Unicode.
+        # Clean text from non-ascii characters and escaped whitespace.
+        # Then make all tags lowercase and remove repeated tags.
         if (len(tags) >= 2):
             tags = set( map(lambda s: clean_string(s)[0].lower(), tags) )
-            for i in tags:
-                for j in tags:
-                    if i != j:
-                        self.edges[(i, j)] += 1
-                        if self.edges[(i, j)] == 1:
-                            self.degrees[i] += 1
-                            self.sum_degrees += 1
-                            if self.degrees[i] == 1:
-                                self.number_vertices += 1
+            pairs_tags = [(i, j) for i in tags for j in tags if i != j]
+            #for i in tags:
+            #    for j in tags:
+            #        if i != j:
+            for (i, j) in pairs_tags:
+                self.edges[(i, j)] += 1
+                if self.edges[(i, j)] == 1:
+                    self.sum_degrees += 1
+                    self.degrees[i] += 1
+                    if self.degrees[i] == 1:
+                        self.number_vertices += 1
 
 
 
     def remove_edges(self, tags):
         # Input tags are all lowercase
         if (len(tags) >= 2):
-            for i in tags:
-                for j in tags:
-                    if i != j:
-                        self.edges[(i, j)] -= 1
-                        if self.edges[(i, j)] == 0:
-                            self.degrees[i] -= 1
-                            self.sum_degrees -= 1
-                            if self.degrees[i] <= 0:
-                                self.number_vertices -= 1
+            pairs_tags = [(i, j) for i in tags for j in tags if i != j]
+            for (i, j) in pairs_tags:
+                self.edges[(i, j)] -= 1
+                if self.edges[(i, j)] == 0:
+                    self.sum_degrees -= 1
+                    self.degrees[i] -= 1
+                    if self.degrees[i] == 0:
+                        self.number_vertices -= 1
 
     def show_edges(self):
         print "Graph", self.edges    
