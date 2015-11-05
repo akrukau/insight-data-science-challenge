@@ -16,10 +16,10 @@ src/average_degree.py - Calculates average degree for hashtag graph
 src/graph.py - Graph module that calculates average degree   
 src/text_utilities.py - Clean utility for tweet text   
 
-The solution uses modules from Python standard library.
-Tested with Linux and Python 2.7.5 , should work with other releases of 2.7 Python.
+The solution uses modules from Python standard library.  
+Tested with Linux and Python 2.7.5 , should work with other releases of 2.7 Python.  
 
-Details of implementation are in the sourc code. 
+Details of implementation are in the source code. 
 I tested code on up to one gigabyte of tweets, it scales well.
 
  
