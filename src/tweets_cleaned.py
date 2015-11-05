@@ -18,7 +18,7 @@ if len(sys.argv) < 3:
 else:
     with open(sys.argv[1], 'rb') as input_file, open(sys.argv[2], 'wb') as output_file:
         count_tweets_unicode = 0
-
+        
         for line in input_file:
             try:
                 tweet = json.loads(line)
@@ -39,12 +39,11 @@ else:
                 sys.stderr.write("The following line is not valid JSON\n")
                 sys.stderr.write(line)
 
-            #except Exception as error:
-            #    sys.stderr.write(error.message)
-            #    sys.stderr.write("Error trying to process the line\n")
-            #    sys.stderr.write(line)
+            except Exception as error:
+                sys.stderr.write(error.message)
+                sys.stderr.write("Error trying to process the line\n")
+                sys.stderr.write(line)
         
-        summary =  "\n" + str(count_tweets_unicode) + " tweets contained unicode."
+        summary =  "\n" + str(count_tweets_unicode) + " tweets contained unicode.\n"
         output_file.write(summary)
-            
 

@@ -69,34 +69,35 @@ def remove_old_tweets(heap, graph, current_time, debug):
             graph.show_edges()
 
 
-#with open('../data-gen/example-github.txt', 'rb') as input_file:
-#with open('../tweet_input/oct-15-2011.txt', 'rb') as input_file:
-#with open('../data-gen/tweets.txt', 'rb') as input_file:
-with open('./changed-example-github.txt', 'rb') as input_file:
-    debug = True
-    heap = []
-    graph = Graph()
-    for line in input_file:
-        try:
-            tweet = json.loads(line)
-            if "created_at" in tweet:
-                timestamp_string = tweet["created_at"]
-                timestamp = extract_time(timestamp_string)
-                add_tweet(heap, graph, tweet, timestamp, debug)
-                remove_old_tweets(heap, graph, timestamp, debug)
-                if debug:
-                    graph.show_degrees()
-                average_degree = graph.average_degree()
-                print "{0:.2f}".format(average_degree) 
+if len(sys.argv) < 3:
+    print "Error: too few arguments"
+    print "Usage: ./tweets_cleaned.py input_file output_file"
+else:
+    with open(sys.argv[1], 'rb') as input_file, open(sys.argv[2], 'wb') as output_file:
+        debug = False
+        heap = []
+        graph = Graph()
+        for line in input_file:
+            try:
+                tweet = json.loads(line)
+                if "created_at" in tweet:
+                    timestamp_string = tweet["created_at"]
+                    timestamp = extract_time(timestamp_string)
+                    add_tweet(heap, graph, tweet, timestamp, debug)
+                    remove_old_tweets(heap, graph, timestamp, debug)
+                    if debug:
+                        graph.show_degrees()
+                    average_degree = graph.average_degree()
+                    output_file.write("{0:.2f}\n".format(average_degree)) 
 
-        except ValueError:
-            sys.stderr.write("The following line is not valid JSON\n")
-            sys.stderr.write(line)
+            except ValueError:
+                sys.stderr.write("The following line is not valid JSON\n")
+                sys.stderr.write(line)
 
-        #except Exception as error:
-        #    sys.stderr.write(error.message)
-        #    sys.stderr.write("Error trying to process the line\n")
-        #    sys.stderr.write(line)
+            except Exception as error:
+                sys.stderr.write(error.message)
+                sys.stderr.write("Error trying to process the line\n")
+                sys.stderr.write(line)
 
             
 
