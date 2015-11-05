@@ -85,9 +85,7 @@ def extract_time(timestamp_string):
     timezone_correction = timedelta(seconds = tuple_time[-1]) 
     return raw_time - timezone_correction
 
-def add_tweet(heap, graph, tweet):
-    timestamp_string = tweet["created_at"]
-    timestamp = extract_time(timestamp_string)
+def add_tweet(heap, graph, tweet, timestamp):
     tags = []
     if "entities" in tweet and "hashtags" in tweet["entities"]:
         for entry in tweet['entities']['hashtags']:
@@ -105,8 +103,6 @@ def add_tweet(heap, graph, tweet):
     graph.add_edges(tags)
 
     #graph.dump()
-       
-    return timestamp
 
 def remove_old_tweets(heap, graph, current_time):
     while heap:        
@@ -122,14 +118,17 @@ def remove_old_tweets(heap, graph, current_time):
 
 #with open('../data-gen/example-github.txt', 'rb') as input_file:
 with open('../data-gen/tweets.txt', 'rb') as input_file:
+#with open('../tweet_input/oct-15-2011.txt', 'rb') as input_file:
     heap = []
     graph = Graph()
     for line in input_file:
         try:
             tweet = json.loads(line)
             if "created_at" in tweet:
-                current_time = add_tweet(heap, graph, tweet)
-                remove_old_tweets(heap, graph, current_time)
+                timestamp_string = tweet["created_at"]
+                timestamp = extract_time(timestamp_string)
+                add_tweet(heap, graph, tweet, timestamp)
+                remove_old_tweets(heap, graph, timestamp)
                 #graph.show_degrees()
                 ans = graph.average_degree()
 
