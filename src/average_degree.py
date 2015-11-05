@@ -12,80 +12,24 @@ import sys
 from email.utils import parsedate_tz
 from datetime import datetime, timedelta
 from heapq import heappush, heappop
-from collections import Counter
 from text_utilities import clean_string
-
-class Graph:
-    def __init__(self):
-        self.edges = Counter()
-        self.degrees = Counter()
-        self.sum_degrees = 0
-        self.number_vertices = 0
-
-    def add_edges(self, tags):
-        if (len(tags) >= 2):
-            pairs_tags = [(i, j) for i in tags for j in tags if i != j]
-            for (i, j) in pairs_tags:
-                self.edges[(i, j)] += 1
-                if self.edges[(i, j)] == 1:
-                    self.sum_degrees += 1
-                    self.degrees[i] += 1
-                    if self.degrees[i] == 1:
-                        self.number_vertices += 1
-        #if self.sum_degrees > 0:
-        #    print
-        #    print "Tweet is",tags
-
-
-
-    def remove_edges(self, tags):
-        # Input tags are all in lowercase ascii characters.
-        if (len(tags) >= 2):
-            pairs_tags = [(i, j) for i in tags for j in tags if i != j]
-            for (i, j) in pairs_tags:
-                self.edges[(i, j)] -= 1
-                if self.edges[(i, j)] == 0:
-                    self.sum_degrees -= 1
-                    self.degrees[i] -= 1
-                    if self.degrees[i] == 0:
-                        self.number_vertices -= 1
-
-    def show_edges(self):
-        print "Graph", self.edges    
-    
-    def show_degrees(self):
-        for vertex in self.degrees:
-            print "Vertex", vertex, "degree", self.degrees[vertex]
-
-    def average_degree(self):
-        #print "Graph", self.edges  
-        #number_vertices = sum(1 for v in self.degrees if self.degrees[v] > 0)
-        #sum_degrees  = sum(self.degrees[v] for v in self.degrees)
-        #if vertex_count > 0:
-        if self.number_vertices > 0:
-            average_degree = 1.0 * self.sum_degrees / self.number_vertices
-            #average_degree = 1.0 * sum_degrees / number_vertices
-        else:    
-            average_degree = 0.0
-        #info_average_degree = "Average degree " + "{0:.2f}".format(average_degree)    
-        info_average_degree = "{0:.2f}".format(average_degree)    
-        #if self.sum_degrees > 0:
-        #    self.show_degrees()
-        print info_average_degree
-        return average_degree
-
-    def dump(self):
-        self.show_edges()
-        self.show_degrees()
-        self.average_degree()
+from graph import Graph
 
 def extract_time(timestamp_string):
+    """Return the datetime object based on timestamp_string"""
     tuple_time = parsedate_tz(timestamp_string.strip())
     raw_time = datetime(*tuple_time[:6])
     timezone_correction = timedelta(seconds = tuple_time[-1]) 
     return raw_time - timezone_correction
 
 def add_tweet(heap, graph, tweet, timestamp):
+    """
+    Adds tweet to heap and to graph
+    
+    Heap stores all tweets with timestamp as a key.
+    The top of the heap is the oldest tweet.
+    Graph stores information about all edges between tweets.
+    """
     tags = []
     if "entities" in tweet and "hashtags" in tweet["entities"]:
         for entry in tweet['entities']['hashtags']:
@@ -102,9 +46,8 @@ def add_tweet(heap, graph, tweet, timestamp):
     #print "Adding tweet",tweet_entry
     graph.add_edges(tags)
 
-    #graph.dump()
-
 def remove_old_tweets(heap, graph, current_time):
+    """Removes the tweets that are 61 seconds or more before current_time"""
     while heap:        
         oldest_time = heap[0][0]
         time_dif = current_time - oldest_time
@@ -112,13 +55,14 @@ def remove_old_tweets(heap, graph, current_time):
             break
         tweet = heappop(heap)
         tags = tweet[1]
+        #print "Deleting tweet with Timestamp",tweet[0]
         #print "Removing old tweet", tweet
         graph.remove_edges(tags)
 
 
-#with open('../data-gen/example-github.txt', 'rb') as input_file:
-with open('../data-gen/tweets.txt', 'rb') as input_file:
+with open('../data-gen/example-github.txt', 'rb') as input_file:
 #with open('../tweet_input/oct-15-2011.txt', 'rb') as input_file:
+#with open('../data-gen/tweets.txt', 'rb') as input_file:
     heap = []
     graph = Graph()
     for line in input_file:
@@ -126,16 +70,17 @@ with open('../data-gen/tweets.txt', 'rb') as input_file:
             tweet = json.loads(line)
             if "created_at" in tweet:
                 timestamp_string = tweet["created_at"]
+                #print "Timestamp",timestamp_string
                 timestamp = extract_time(timestamp_string)
                 add_tweet(heap, graph, tweet, timestamp)
                 remove_old_tweets(heap, graph, timestamp)
                 #graph.show_degrees()
                 ans = graph.average_degree()
 
-
         except ValueError:
             sys.stderr.write("The following line is not valid JSON\n")
             sys.stderr.write(line)
+
         #except:
         #    sys.stderr.write("The following line could not be parsed\n")
         #    sys.stderr.write(line)
