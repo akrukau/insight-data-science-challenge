@@ -38,8 +38,10 @@ else:
             except ValueError:
                 sys.stderr.write("The following line is not valid JSON\n")
                 sys.stderr.write(line)
-            #except:
-            #    sys.stderr.write("The following line could not be parsed\n")
+
+            #except Exception as error:
+            #    sys.stderr.write(error.message)
+            #    sys.stderr.write("Error trying to process the line\n")
             #    sys.stderr.write(line)
         
         summary =  "\n" + str(count_tweets_unicode) + " tweets contained unicode."

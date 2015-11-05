@@ -1,0 +1,91 @@
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 1), set([u'apache', u'spark']))
+Vertex apache degree 1
+Vertex spark degree 1
+1.00
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 30), set([u'apache', u'hadoop', u'storm']))
+Vertex apache degree 3
+Vertex spark degree 1
+Vertex hadoop degree 2
+Vertex storm degree 2
+2.00
+Vertex apache degree 3
+Vertex spark degree 1
+Vertex hadoop degree 2
+Vertex storm degree 2
+2.00
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 56), set([u'spark', u'flink']))
+Vertex apache degree 3
+Vertex spark degree 2
+Vertex flink degree 1
+Vertex hadoop degree 2
+Vertex storm degree 2
+2.00
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 59), set([u'hbase', u'spark']))
+Vertex flink degree 1
+Vertex hadoop degree 2
+Vertex storm degree 2
+Vertex apache degree 3
+Vertex hbase degree 1
+Vertex spark degree 3
+2.00
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 52, 5), set([u'apache', u'hadoop']))
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 51, 1), set([u'apache', u'spark']))
+Graph Counter({(u'hadoop', u'apache'): 2, (u'apache', u'hadoop'): 2, (u'hadoop', u'storm'): 1, (u'storm', u'hadoop'): 1, (u'flink', u'spark'): 1, (u'storm', u'apache'): 1, (u'hbase', u'spark'): 1, (u'spark', u'hbase'): 1, (u'spark', u'flink'): 1, (u'apache', u'storm'): 1, (u'spark', u'apache'): 0, (u'apache', u'spark'): 0})
+Vertex flink degree 1
+Vertex hadoop degree 2
+Vertex storm degree 2
+Vertex apache degree 2
+Vertex hbase degree 1
+Vertex spark degree 2
+1.67
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 51, 30), set([u'apache', u'hadoop', u'storm']))
+Graph Counter({(u'flink', u'spark'): 1, (u'hadoop', u'apache'): 1, (u'hbase', u'spark'): 1, (u'spark', u'hbase'): 1, (u'spark', u'flink'): 1, (u'apache', u'hadoop'): 1, (u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'storm', u'apache'): 0, (u'apache', u'spark'): 0, (u'apache', u'storm'): 0})
+Vertex flink degree 1
+Vertex hadoop degree 1
+Vertex storm degree 0
+Vertex apache degree 1
+Vertex hbase degree 1
+Vertex spark degree 2
+1.20
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 51, 55), set([u'apache']))
+Graph Counter({(u'flink', u'spark'): 1, (u'hadoop', u'apache'): 1, (u'hbase', u'spark'): 1, (u'spark', u'hbase'): 1, (u'spark', u'flink'): 1, (u'apache', u'hadoop'): 1, (u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'storm', u'apache'): 0, (u'apache', u'spark'): 0, (u'apache', u'storm'): 0})
+Vertex flink degree 1
+Vertex hadoop degree 1
+Vertex storm degree 0
+Vertex apache degree 1
+Vertex hbase degree 1
+Vertex spark degree 2
+1.20
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 51, 56), set([u'spark', u'flink']))
+Graph Counter({(u'hadoop', u'apache'): 1, (u'hbase', u'spark'): 1, (u'spark', u'hbase'): 1, (u'apache', u'hadoop'): 1, (u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'flink', u'spark'): 0, (u'storm', u'apache'): 0, (u'apache', u'spark'): 0, (u'spark', u'flink'): 0, (u'apache', u'storm'): 0})
+Vertex flink degree 0
+Vertex hadoop degree 1
+Vertex storm degree 0
+Vertex apache degree 1
+Vertex hbase degree 1
+Vertex spark degree 1
+1.00
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 51, 59), set([u'hbase', u'spark']))
+Graph Counter({(u'hadoop', u'apache'): 1, (u'apache', u'hadoop'): 1, (u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'flink', u'spark'): 0, (u'storm', u'apache'): 0, (u'hbase', u'spark'): 0, (u'spark', u'hbase'): 0, (u'apache', u'spark'): 0, (u'spark', u'flink'): 0, (u'apache', u'storm'): 0})
+Vertex flink degree 0
+Vertex hadoop degree 1
+Vertex storm degree 0
+Vertex apache degree 1
+Vertex hbase degree 0
+Vertex spark degree 0
+1.00
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 52, 5), set([u'apache', u'hadoop']))
+Graph Counter({(u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'flink', u'spark'): 0, (u'storm', u'apache'): 0, (u'hadoop', u'apache'): 0, (u'hbase', u'spark'): 0, (u'spark', u'hbase'): 0, (u'apache', u'spark'): 0, (u'spark', u'flink'): 0, (u'apache', u'hadoop'): 0, (u'apache', u'storm'): 0})
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 52, 31), set([u'hadoop']))
+Graph Counter({(u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'flink', u'spark'): 0, (u'storm', u'apache'): 0, (u'hadoop', u'apache'): 0, (u'hbase', u'spark'): 0, (u'spark', u'hbase'): 0, (u'apache', u'spark'): 0, (u'spark', u'flink'): 0, (u'apache', u'hadoop'): 0, (u'apache', u'storm'): 0})
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 52, 56), set([u'hadoop']))
+Graph Counter({(u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'flink', u'spark'): 0, (u'storm', u'apache'): 0, (u'hadoop', u'apache'): 0, (u'hbase', u'spark'): 0, (u'spark', u'hbase'): 0, (u'apache', u'spark'): 0, (u'spark', u'flink'): 0, (u'apache', u'hadoop'): 0, (u'apache', u'storm'): 0})
+Removing old tweet (datetime.datetime(2015, 10, 29, 17, 52, 57), set([u'hadoop']))
+Graph Counter({(u'hadoop', u'storm'): 0, (u'spark', u'apache'): 0, (u'storm', u'hadoop'): 0, (u'flink', u'spark'): 0, (u'storm', u'apache'): 0, (u'hadoop', u'apache'): 0, (u'hbase', u'spark'): 0, (u'spark', u'hbase'): 0, (u'apache', u'spark'): 0, (u'spark', u'flink'): 0, (u'apache', u'hadoop'): 0, (u'apache', u'storm'): 0})
+Vertex flink degree 0
+Vertex hadoop degree 0
+Vertex storm degree 0
+Vertex apache degree 0
+Vertex hbase degree 0
+Vertex spark degree 0
+0.00

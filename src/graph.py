@@ -1,11 +1,17 @@
 from collections import Counter
+import unittest
 
 class Graph:
     '''
     Class graph stores information about tweet connectivity.
     
     The class stores all edges and degrees of all vertices.
-    For each edge, we also store in self.edges how many times this edge occur.
+    We also store number of vertices with degree more than zero and 
+    sum of vertex degrees.
+    We update these variables when we add or remove edges. 
+    This is much more efficient than scanning all vertex degrees at every graph update.
+
+    Note that for each edge, we also store in self.edges how many times this edge occur.
     However, when we count vertex degrees, we consider only whether two vertices
     are connected or not.
 
@@ -19,11 +25,6 @@ class Graph:
     #Apache and #Spark are connected with two edges. However, when
     we calculate vertex degrees, we assume there is only 
     one edge between #Apache and #Spark.
-
-    We also store number of vertices with degree more than zero and 
-    sum of vertex degrees.
-    We update these variables when we add or remove edges. 
-    This is more efficient than summing all the degrees at every graph update.
     '''
     def __init__(self):
         self.edges = Counter()
@@ -67,13 +68,11 @@ class Graph:
             print "Vertex", vertex, "degree", self.degrees[vertex]
 
     def average_degree(self):
-        '''Show average degree of all vertices with at least one edge'''
+        '''Returns average degree of all vertices with at least one edge'''
         if self.number_vertices > 0:
             average_degree = 1.0 * self.sum_degrees / self.number_vertices
         else:    
             average_degree = 0.0
-        info_average_degree = "{0:.2f}".format(average_degree)    
-        print info_average_degree
         return average_degree
 
     def dump(self):
@@ -82,4 +81,12 @@ class Graph:
         self.show_degrees()
         self.average_degree()
 
+class TestGraph(unittest.TestCase):
+  def test_average_degree(self):
+      graph = Graph()
+      graph.add_edges( set(["Apache", "Hadoop"]) )
+      self.assertTrue(abs(graph.average_degree() - 1.0) < 0.01)
+
+if __name__ == '__main__':
+    unittest.main()
 
