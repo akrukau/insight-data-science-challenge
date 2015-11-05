@@ -1,0 +1,72 @@
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 1), [u'spark', u'apache'])
+Vertex apache degree 1
+
+Vertex spark degree 1
+
+Average degree 1.00
+
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 30), [u'apache', u'hadoop', u'storm'])
+Vertex apache degree 3
+
+Vertex spark degree 1
+
+Vertex hadoop degree 2
+
+Vertex storm degree 2
+
+Average degree 2.00
+
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 55), [u'apache'])
+Vertex apache degree 3
+
+Vertex spark degree 1
+
+Vertex hadoop degree 2
+
+Vertex storm degree 2
+
+Average degree 2.00
+
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 56), [u'flink', u'spark'])
+Vertex apache degree 3
+
+Vertex spark degree 2
+
+Vertex flink degree 1
+
+Vertex hadoop degree 2
+
+Vertex storm degree 2
+
+Average degree 2.00
+
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 51, 59), [u'hbase', u'spark'])
+Vertex flink degree 1
+
+Vertex hadoop degree 2
+
+Vertex storm degree 2
+
+Vertex apache degree 3
+
+Vertex hbase degree 1
+
+Vertex spark degree 3
+
+Average degree 2.00
+
+Adding tweet (datetime.datetime(2015, 10, 29, 17, 52, 5), [u'hadoop', u'apache'])
+Vertex flink degree 1
+
+Vertex hadoop degree 2
+
+Vertex storm degree 2
+
+Vertex apache degree 2
+
+Vertex hbase degree 1
+
+Vertex spark degree 2
+
+Average degree 1.67
+

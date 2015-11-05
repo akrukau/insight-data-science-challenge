@@ -18,18 +18,24 @@ class Graph:
     def __init__(self):
         self.edges = Counter()
         self.degrees = Counter()
+        self.sum_degrees = 0
+        self.number_vertices = 0
 
     def add_edges(self, tags):
         # Input tags are in mixed case
-        # Make all tags lowercase and remove repeated tags.
+        # Clean text, then make all tags lowercase and remove repeated tags.
         if (len(tags) >= 2):
-            tags = set( map(lambda s: s.lower(), tags) )
+            tags = set( map(lambda s: clean_string(s)[0].lower(), tags) )
             for i in tags:
                 for j in tags:
                     if i != j:
                         self.edges[(i, j)] += 1
                         if self.edges[(i, j)] == 1:
                             self.degrees[i] += 1
+                            self.sum_degrees += 1
+                            if self.degrees[i] == 1:
+                                self.number_vertices += 1
+
 
 
     def remove_edges(self, tags):
@@ -41,8 +47,9 @@ class Graph:
                         self.edges[(i, j)] -= 1
                         if self.edges[(i, j)] == 0:
                             self.degrees[i] -= 1
-                            if self.degrees <= 0:
-                                self.vertex_count -= 1
+                            self.sum_degrees -= 1
+                            if self.degrees[i] <= 0:
+                                self.number_vertices -= 1
 
     def show_edges(self):
         print "Graph", self.edges    
@@ -54,17 +61,19 @@ class Graph:
 
     def average_degree(self):
         #print "Graph", self.edges  
-        vertex_count = sum(1 for v in self.degrees if self.degrees[v] > 0)
-        sum_degrees  = sum(self.degrees[v] for v in self.degrees)
-        if vertex_count > 0:
-            average_degree = 1.0 * sum_degrees / vertex_count
+        #number_vertices = sum(1 for v in self.degrees if self.degrees[v] > 0)
+        #sum_degrees  = sum(self.degrees[v] for v in self.degrees)
+        #if vertex_count > 0:
+        if self.number_vertices > 0:
+            average_degree = 1.0 * self.sum_degrees / self.number_vertices
+            #average_degree = 1.0 * sum_degrees / number_vertices
         else:    
             average_degree = 0.0
         info_average_degree = "Average degree " + "{0:.2f}".format(average_degree)    
         #print "Vertex count",vertex_count
         #print "Degree count",sum_degrees
         print info_average_degree
-        print 
+        #print 
 
     def dump(self):
         self.show_edges()
@@ -87,7 +96,7 @@ def add_tweet(heap, graph, tweet):
                 tags.append(entry["text"].lower())
     tweet_entry = (timestamp, tags)
     heappush(heap, tweet_entry)
-    print "Adding tweet",tweet_entry
+    #print "Adding tweet",tweet_entry
     graph.add_edges(tags)
 
     #graph.dump()
@@ -106,8 +115,8 @@ def remove_old_tweets(heap, graph, current_time):
         graph.remove_edges(tags)
 
 
-with open('../data-gen/tweets.txt', 'rb') as input_file:
 #with open('../data-gen/example-github.txt', 'rb') as input_file:
+with open('../data-gen/tweets.txt', 'rb') as input_file:
     heap = []
     graph = Graph()
     for line in input_file:
@@ -117,7 +126,7 @@ with open('../data-gen/tweets.txt', 'rb') as input_file:
                 current_time = add_tweet(heap, graph, tweet)
                 remove_old_tweets(heap, graph, current_time)
                 #graph.show_degrees()
-                #graph.average_degree()
+                graph.average_degree()
         except ValueError:
             sys.stderr.write("The following line is not valid JSON\n")
             sys.stderr.write(line)
