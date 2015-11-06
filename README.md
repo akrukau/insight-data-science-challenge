@@ -7,7 +7,7 @@ Insight Data Engineering - Coding Challenge
 This solution implements both required features.
 To run the code, please run in the command line:
 
- ./run
+ ./run.sh
 
 Solution consists of four files:
 
